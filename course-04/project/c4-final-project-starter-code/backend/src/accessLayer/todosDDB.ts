@@ -1,23 +1,20 @@
-import * as AWSXRay from 'aws-xray-sdk'
-import { DocumentClient } from 'aws-sdk/clients/dynamodb'
+import * as AWS from 'aws-sdk'
 import { createLogger } from '../utils/logger'
 import { TodoItem } from '../models/TodoItem'
 import { TodoUpdate } from '../models/TodoUpdate';
 
-export class TodosAccess {
+export class TodosDDB {
     constructor(
-        private readonly docClient = new DocumentClient(),
+        private readonly ddbClient = new AWS.DynamoDB.DocumentClient(),
         private readonly todoTable = process.env.TODOS_TABLE,
         private readonly LSI = process.env.TODOS_CREATED_AT_INDEX,
-        private readonly logger = createLogger('TODO.DataLayer')
-    ) {
-        AWSXRay.captureAWSClient((docClient as any).service)
-    }
+        private readonly logger = createLogger('TODO.DDB')
+    ) {}
 
 
     async getTodosForUser(uid: string): Promise<TodoItem[]> {
-        this.logger.debug({method: 'getTodosForUser'})
-        const result = await this.docClient.query({
+        this.logger.info({method: 'getTodosForUser'})
+        const result = await this.ddbClient.query({
             TableName: this.todoTable,
             IndexName: this.LSI,
             KeyConditionExpression: "userId = :userId",
@@ -30,8 +27,8 @@ export class TodosAccess {
     }
 
     async createTodo(todo: TodoItem): Promise<TodoItem> {
-        this.logger.debug({method: 'createTodo'})
-        await this.docClient.put({
+        this.logger.info({method: 'createTodo'})
+        await this.ddbClient.put({
             TableName: this.todoTable,
             Item: {
                userId: todo.userId,
@@ -41,17 +38,17 @@ export class TodosAccess {
                createdAt: todo.createdAt,
                done: todo.done
             }
-        }).promise() as any
+        }).promise()
         return todo
     }   
 
     async updateTodo(uid: string, todoId: string, todo: TodoUpdate): Promise<void> {
-        this.logger.debug({method: 'updateTodo'})
-        await this.docClient.update({
+        this.logger.info({method: 'updateTodo'})
+        await this.ddbClient.update({
             TableName: this.todoTable,
             Key: {
                 userId: uid,
-                todoId: todoId
+                todoId
             },
             UpdateExpression: "set #name = :name, dueDate = :dueDate, done = :done",
             ExpressionAttributeValues: {
@@ -62,16 +59,31 @@ export class TodosAccess {
             ExpressionAttributeNames: {
                 "#name": "name"
             }
-        }).promise() as any
+        }).promise()
     }
 
     async deleteTodo(uid: string, todoId: string): Promise<void> {
-        this.logger.debug({method: 'deleteTodo'})
-        await this.docClient.delete({
+        this.logger.info({method: 'deleteTodo'})
+        await this.ddbClient.delete({
             TableName: this.todoTable,
             Key: {
                 userId: uid,
                 todoId: todoId
+            }
+        }).promise()
+    }
+
+    async updateAttachmentUrl(uid: string, todoId: string, attachmentUrl: string): Promise<void> {
+        this.logger.info({method: 'updateAttachmentUrl'})
+        await this.ddbClient.update({
+            TableName: this.todoTable,
+            Key: {
+                userId: uid,
+                todoId: todoId
+            },
+            UpdateExpression: "set attachmentUrl = :attachmentUrl",
+            ExpressionAttributeValues: {
+                ":attachmentUrl": attachmentUrl
             }
         }).promise()
     }
