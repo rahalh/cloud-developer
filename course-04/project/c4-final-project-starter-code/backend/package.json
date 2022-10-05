@@ -5,16 +5,17 @@
   "dependencies": {
     "@types/axios": "^0.14.0",
     "@types/http-errors": "^1.6.1",
-    "aws-sdk": "^2.1228.0",
-    "aws-xray-sdk": "^3.3.8",
-    "aws-xray-sdk-core": "^3.3.3",
+    "@types/node": "^18.8.2",
+    "aws-sdk": "^2.657.0",
+    "aws-xray-sdk": "^3.0.0",
     "axios": "^0.18.0",
     "http-errors": "^1.7.2",
     "jsonwebtoken": "^8.5.1",
     "jwk-to-pem": "^2.0.5",
     "middy": "^0.27.0",
     "uuid": "^3.3.2",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "source-map-support": "^0.4.18"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",

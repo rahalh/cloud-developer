@@ -6,8 +6,7 @@ import { Jwt } from '../../auth/Jwt'
 import { JwtPayload } from '../../auth/JwtPayload'
 import jwkToPem from 'jwk-to-pem'
 
-const logger = createLogger('auth')
-
+const logger = createLogger('Authorizer')
 const jwksUrl = 'https://dev-ld1m3p9a.us.auth0.com/.well-known/jwks.json'
 
 export const handler = async (

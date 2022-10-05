@@ -1,16 +1,18 @@
+import * as XRay from 'aws-xray-sdk'
 import * as AWS from 'aws-sdk'
 import { createLogger } from '../utils/logger'
 import { TodoItem } from '../models/TodoItem'
 import { TodoUpdate } from '../models/TodoUpdate';
 
+const aws = XRay.captureAWS(AWS)
+
 export class TodosDDB {
     constructor(
-        private readonly ddbClient = new AWS.DynamoDB.DocumentClient(),
+        private readonly ddbClient = new aws.DynamoDB.DocumentClient(),
         private readonly todoTable = process.env.TODOS_TABLE,
         private readonly LSI = process.env.TODOS_CREATED_AT_INDEX,
         private readonly logger = createLogger('TODO.DDB')
     ) {}
-
 
     async getTodosForUser(uid: string): Promise<TodoItem[]> {
         this.logger.info({method: 'getTodosForUser'})
