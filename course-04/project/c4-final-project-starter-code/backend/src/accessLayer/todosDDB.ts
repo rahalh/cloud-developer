@@ -15,7 +15,7 @@ export class TodosDDB {
     ) {}
 
     async getTodosForUser(uid: string): Promise<TodoItem[]> {
-        this.logger.info({method: 'getTodosForUser'})
+        this.logger.info({input: {uid}})
         const result = await this.ddbClient.query({
             TableName: this.todoTable,
             IndexName: this.LSI,
@@ -29,7 +29,7 @@ export class TodosDDB {
     }
 
     async createTodo(todo: TodoItem): Promise<TodoItem> {
-        this.logger.info({method: 'createTodo'})
+        this.logger.info({input: {todo}})
         await this.ddbClient.put({
             TableName: this.todoTable,
             Item: {
@@ -45,7 +45,7 @@ export class TodosDDB {
     }   
 
     async updateTodo(uid: string, todoId: string, todo: TodoUpdate): Promise<void> {
-        this.logger.info({method: 'updateTodo'})
+        this.logger.info({input: {uid, todoId, todo}})
         await this.ddbClient.update({
             TableName: this.todoTable,
             Key: {
@@ -65,7 +65,7 @@ export class TodosDDB {
     }
 
     async deleteTodo(uid: string, todoId: string): Promise<void> {
-        this.logger.info({method: 'deleteTodo'})
+        this.logger.info({input: {uid, todoId}})
         await this.ddbClient.delete({
             TableName: this.todoTable,
             Key: {
@@ -76,7 +76,7 @@ export class TodosDDB {
     }
 
     async updateAttachmentUrl(uid: string, todoId: string, attachmentUrl: string): Promise<void> {
-        this.logger.info({method: 'updateAttachmentUrl'})
+        this.logger.info({input: {uid, todoId, attachmentUrl}})
         await this.ddbClient.update({
             TableName: this.todoTable,
             Key: {

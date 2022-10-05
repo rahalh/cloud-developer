@@ -20,7 +20,7 @@ export async function createTodo(
   uid: string,
   req: CreateTodoRequest
 ): Promise<TodoItem> {
-  logger.debug({method: 'createTodo'})
+  logger.debug({input: {uid, req}})
   return await todoAccess.createTodo({
     ...req,
     userId: uid,
@@ -35,23 +35,23 @@ export async function updateTodo(
   todoId: string,
   req: UpdateTodoRequest
 ) {
-  logger.debug({method: 'updateTodo'})
+  logger.debug({input: {uid, todoId, req}})
   return await todoAccess.updateTodo(uid, todoId, req)
 }
 
 export async function deleteTodo(uid: string, todoId: string) {
-  logger.debug({method: 'deleteTodo'})
+  logger.debug({input: {uid, todoId}})
   await todoAccess.deleteTodo(uid, todoId)
 }
 
 export async function createAttachmentPresignedUrl(uid: string, todoId: string): Promise<string> {
-  logger.debug({method: 'createAttachmentPresignedUrl'})
+  logger.debug({input: {uid, todoId}})
   const key = `${uid}/${todoId}`
   return await todoAttachment.createAttachmentPresignedUrl(key)
 }
 
 export async function updateAttachmentUrl(regionCode, bucketName, key: string) {
-  logger.debug({method: 'updateAttachmentUrl'})
+  logger.debug({input: {regionCode, bucketName, key}})
   
   const attachmentUrl = `https://s3.${regionCode}.amazonaws.com/${bucketName}/${key}`
   const [userId, todoId] = decodeURI(key).split('/')

@@ -12,7 +12,7 @@ export class AttachmentS3 {
     ) {}
 
     async createAttachmentPresignedUrl(key: string): Promise<string> {
-        this.logger.info({method: 'createAttachmentPresignedUrl'})
+        this.logger.info({input: {key}})
         return await this.s3Client.getSignedUrlPromise('putObject', {
             Bucket: this.bucketName,
             Key: key,
